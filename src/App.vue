@@ -2,7 +2,8 @@
   <div id="app">
     <div id="nav">
       <router-link to="/catalogs">Catalogo</router-link> |
-      <router-link to="/toViewLater">To view later</router-link> |
+      <router-link to="/toViewLater">Ver para mas tarde</router-link> |
+      <router-link to="/newMovie">Agregar una pelicula</router-link> 
     </div>
     <router-view/>
   </div>

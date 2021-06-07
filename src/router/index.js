@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Catalog from '../views/Catalog/Catalogs.vue'
 import ToViewLater from '../views/ToViewLater/To-view-later.vue'
+import AddMovie from '../views/Add-Movie/Add-movie.vue'
 
 Vue.use(VueRouter)
 
@@ -15,6 +16,11 @@ const routes = [
     path: '/toViewLater',
     name: 'ToViewLater',
     component: ToViewLater
+  },
+  {
+    path: '/newMovie',
+    name: 'AddMovie',
+    component: AddMovie
   }
 ]
 
