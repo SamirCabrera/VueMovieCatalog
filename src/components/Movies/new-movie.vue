@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <form novalidate class="md-layout" @submit.prevent="validateUser">
+    <form novalidate class="md-layout" @submit.prevent="validateMovie">
 
       <md-card class="md-layout-item md-size-50 md-small-size-100">
 
@@ -78,6 +78,10 @@
 
           </div>
 
+          <div>
+  
+  </div>
+
         </md-card-content>
 
         <md-progress-bar md-mode="indeterminate" v-if="sending" />
@@ -136,6 +140,7 @@ export default {
   },
 
   methods: {
+
     getValidationClass(fieldName) {
       const field = this.$v.form[fieldName];
 
@@ -164,13 +169,14 @@ export default {
       }, 1500);
     },
 
-    validateUser() {
+    validateMovie() {
       this.$v.$touch();
 
       if (!this.$v.$invalid) {
         this.saveMovie();
       }
     },
+
   },
 };
 
