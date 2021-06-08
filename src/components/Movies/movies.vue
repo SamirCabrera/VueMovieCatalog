@@ -1,16 +1,14 @@
 <template>
   <div>
-    <md-card md-with-hover 
-      class="md-card-main" 
-      v-for="movie in movies" 
-      :key="movie.id" 
-      :movie="movie">
-
-      <md-card-media >
-        <img
-          src="{movie.images[0].url}}"
-          alt="People"
-        />
+    <md-card
+      md-with-hover
+      class="md-card-main"
+      v-for="movie in movies"
+      :key="movie.id"
+      :movie="movie"
+    >
+      <md-card-media>
+        <img src="{movie.images[0].url}}" alt="People" />
       </md-card-media>
 
       <md-card-header>
@@ -19,6 +17,7 @@
 
       <md-card-expand>
         <md-card-actions md-alignment="space-between">
+
           <div class="md-div-switch">
             <md-switch v-model="isLike">Me gusta</md-switch>
             <md-switch v-model="isView">La he visto</md-switch>
@@ -36,6 +35,16 @@
           <md-card-content>
             {{ movie.description }}
           </md-card-content>
+
+          <md-button class="md-accent" @click="deleteMovie(movie.id)">Eliminar pelicula</md-button>
+          <md-button class="md-primary" @click="editMovie()">Editar pelicula</md-button>
+
+          <DialogEditMovie v-if="showEditDialog" 
+            :showDialog = "showEditDialog"
+            :movie = movie 
+            @close="showEditDialog = false"
+          ></DialogEditMovie>
+
         </md-card-expand-content>
       </md-card-expand>
     </md-card>
@@ -43,18 +52,39 @@
 </template>
 
 <script>
+
+import DialogEditMovie from '@/components/Movies/dialog-edit-movie';
+
 export default {
   name: "Movie",
-  data: () => ({
-    isLike: false,
-    isView: false,
-    movies: null
-  }),
+  components: {
+    DialogEditMovie
+  },
+
+  data() {
+    return {
+      isLike: false,
+      isView: false,
+      movies: null,
+      showEditDialog: false
+    }
+  },
 
   created() {
     this.$store.commit("getMovies");
     this.movies = this.$store.state.movie;
   },
+
+  methods: {
+    deleteMovie(id) {
+      this.$store.state.idMovie = id;
+      this.$store.commit("deleteMovie");
+    },
+
+    editMovie() {
+      this.showEditDialog = true
+    }
+  }
 };
 </script>
 
@@ -70,4 +100,5 @@ export default {
 .md-div-switch {
   margin: 0 40px;
 }
+
 </style>

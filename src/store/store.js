@@ -8,8 +8,10 @@ Vue.use(VueAxios, axios)
 
 export const store = new Vuex.Store({
     state: {
-        movie: '',
-        movieToViewLater: ''
+        movie: [],
+        movieToViewLater: [],
+        newMovie: [],
+        idMovie: null
     },
 
     mutations: {
@@ -24,6 +26,23 @@ export const store = new Vuex.Store({
             Vue.axios.get("https://samir-moviecatalog-api.azurewebsites.net/Movies/ToLater").then( (res) => {
                 state.movieToViewLater = res.data
             })
+        },
+
+        postMovie(state) {
+
+            Vue.axios.post("https://samir-moviecatalog-api.azurewebsites.net/Movies", state.newMovie).then( (res) => {
+                console.log(res);
+            });
+        },
+
+        deleteMovie(state) {
+            Vue.axios.delete("https://samir-moviecatalog-api.azurewebsites.net/Movies/" + state.idMovie).then( (res) => {
+                console.log(res);
+            })
+        },
+
+        putMovie() {
+            
         }
     },
 

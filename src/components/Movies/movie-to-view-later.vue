@@ -14,9 +14,6 @@
         <div class="md-title">{{ movie.title }}</div>
       </md-card-header>
 
-      <md-card-expand>
-        <md-button class="md-accent">Eliminar de esta lista</md-button>
-      </md-card-expand>
     </md-card>
   </div>
 </template>

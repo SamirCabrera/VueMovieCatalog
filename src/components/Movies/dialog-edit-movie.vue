@@ -1,6 +1,9 @@
 <template>
   <div>
-    <form novalidate class="md-layout" @submit.prevent="validateMovie">
+    <md-dialog :md-active.sync="showDialog">
+      <md-dialog-title>Preferences</md-dialog-title>
+
+      <!-- <form novalidate class="md-layout" @submit.prevent="validateMovie">
       <md-card class="md-layout-item md-size-50 md-small-size-100">
         <md-card-header>
           <div class="md-title">Nueva pelicula</div>
@@ -82,112 +85,33 @@
       <md-snackbar :md-active.sync="movieSaved"
         >Se añadio la pelicula {{ movie }} correctamente!</md-snackbar
       >
-    </form>
+    </form> -->
+
+      <md-dialog-actions>
+        <md-button class="md-primary" @click="closeDialog()">Close</md-button>
+
+        <button @click="x()">ver</button>
+      </md-dialog-actions>
+    </md-dialog>
   </div>
 </template>
 
 <script>
-import { validationMixin } from "vuelidate";
-import { required, maxLength } from "vuelidate/lib/validators";
-
 export default {
-  name: "NewMovie",
-
-  mixins: [validationMixin],
-
-  data: () => ({
-    form: {
-      movieName: null,
-      description: null,
-      url: null,
-    },
-
-    movieSaved: false,
-    sending: false,
-    movie: null,
-  }),
-
-  validations: {
-    form: {
-      movieName: {
-        required,
-        maxLength: maxLength(20),
-      },
-
-      description: {
-        maxLength: maxLength(40),
-      },
-
-      url: {
-        required,
-      },
-    },
-  },
-
+  name: "DialogEditMovie",
+  props: ["showDialog", "movie"],
   methods: {
-    getValidationClass(fieldName) {
-      const field = this.$v.form[fieldName];
+      closeDialog() {
+          this.$emit('close');
+      },
 
-      if (field) {
-        return {
-          "md-invalid": field.$invalid && field.$dirty,
-        };
+      x() {
+          console.log(this.movie);
       }
-    },
-
-    clearForm() {
-      this.$v.$reset();
-      this.form.movieName = null;
-      this.form.description = null;
-      this.form.url = null;
-    },
-
-    saveMovie() {
-      this.sending = true;
-
-      window.setTimeout(() => {
-        this.movie = `${this.form.movieName}`;
-        this.movieSaved = true;
-        this.sending = false;
-        this.clearForm();
-      }, 1500);
-    },
-
-    validateMovie() {
-      this.$v.$touch();
-
-      if (!this.$v.$invalid) {
-        this.saveMovie();
-      }
-    },
-
-    newMovie() {
-      let movie = {
-        title: this.form.movieName,
-        description: this.form.description,
-        images: [
-          {
-            url: this.form.url,
-          },
-        ],
-      };
-
-      this.$store.state.newMovie = movie;
-      this.$store.commit("postMovie");
-    },
-  },
+  }
+  
 };
 </script>
 
-<style scoped>
-.md-layout {
-  display: block;
-}
-
-.md-layout-item.md-size-50 {
-  min-width: 98%;
-  max-width: 50%;
-  flex: 0 1 50%;
-  margin: 16px;
-}
+<style>
 </style>
