@@ -19,8 +19,9 @@
         <md-card-actions md-alignment="space-between">
 
           <div class="md-div-switch">
-            <md-switch v-model="isLike">Me gusta</md-switch>
-            <md-switch v-model="isView">La he visto</md-switch>
+            <md-switch v-model="movie.like" @change="changeLike(movie.id)">Me gusta</md-switch>
+            <md-switch v-model="movie.view" @change="changeView(movie.id)">La he visto</md-switch>
+            <md-switch v-model="movie.toViewLater" @change="changeToLater(movie.id)">Añadir a ver mas tarde</md-switch>
           </div>
 
           <md-card-expand-trigger>
@@ -37,11 +38,11 @@
           </md-card-content>
 
           <md-button class="md-accent" @click="deleteMovie(movie.id)">Eliminar pelicula</md-button>
-          <md-button class="md-primary" @click="editMovie()">Editar pelicula</md-button>
+          <md-button class="md-primary" @click="editMovie(movie)">Editar pelicula</md-button>
 
           <DialogEditMovie v-if="showEditDialog" 
             :showDialog = "showEditDialog"
-            :movie = movie 
+            :movie = movieToEdit 
             @close="showEditDialog = false"
           ></DialogEditMovie>
 
@@ -63,10 +64,9 @@ export default {
 
   data() {
     return {
-      isLike: false,
-      isView: false,
       movies: null,
-      showEditDialog: false
+      showEditDialog: false,
+      movieToEdit: null
     }
   },
 
@@ -76,13 +76,29 @@ export default {
   },
 
   methods: {
-    deleteMovie(id) {
-      this.$store.state.idMovie = id;
+    deleteMovie(movieId) {
+      this.$store.state.idMovie = movieId;
       this.$store.commit("deleteMovie");
     },
 
-    editMovie() {
+    editMovie(movieEdit) {
       this.showEditDialog = true
+      this.movieToEdit = movieEdit;
+    },
+
+    changeLike(movieId) {
+      this.$store.state.idMovie = movieId;
+      this.$store.commit("changeLike");
+    },
+
+    changeView(movieId) {
+      this.$store.state.idMovie = movieId;
+      this.$store.commit("changeView");
+    },
+
+    changeToLater(movieId) {
+      this.$store.state.idMovie = movieId;
+      this.$store.commit("changeToLater");
     }
   }
 };

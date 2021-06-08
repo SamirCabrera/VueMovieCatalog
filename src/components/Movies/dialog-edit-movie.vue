@@ -1,9 +1,9 @@
 <template>
   <div>
     <md-dialog :md-active.sync="showDialog">
-      <md-dialog-title>Preferences</md-dialog-title>
+      <md-dialog-title>Editar pelicula con Id : {{ this.movie.id }}</md-dialog-title>
 
-      <!-- <form novalidate class="md-layout" @submit.prevent="validateMovie">
+      <form novalidate class="md-layout" @submit.prevent="validateMovie">
       <md-card class="md-layout-item md-size-50 md-small-size-100">
         <md-card-header>
           <div class="md-title">Nueva pelicula</div>
@@ -76,42 +76,148 @@
         <md-progress-bar md-mode="indeterminate" v-if="sending" />
 
         <md-card-actions>
-          <md-button type="submit" class="md-primary" :disabled="sending" @click="newMovie()"
-            >Añadir pelicula</md-button
+          <md-button type="submit" class="md-primary" :disabled="this.$v.$invalid" @click="saveMovie()"
+            >Editar pelicula</md-button
           >
         </md-card-actions>
       </md-card>
 
       <md-snackbar :md-active.sync="movieSaved"
-        >Se añadio la pelicula {{ movie }} correctamente!</md-snackbar
+        >Se edito la pelicula {{ movie }} correctamente!</md-snackbar
       >
-    </form> -->
+    </form>
 
       <md-dialog-actions>
         <md-button class="md-primary" @click="closeDialog()">Close</md-button>
-
-        <button @click="x()">ver</button>
       </md-dialog-actions>
     </md-dialog>
   </div>
 </template>
 
 <script>
+
+import { validationMixin } from "vuelidate";
+import { required, maxLength } from "vuelidate/lib/validators";
+
 export default {
   name: "DialogEditMovie",
+
+  mixins: [validationMixin],
+
   props: ["showDialog", "movie"],
+
+  data: () => ({
+    form: {
+      movieName: null,
+      description: null,
+      url: null
+    },
+
+    movieSaved: false,
+    sending: false,
+  }),
+
+  validations: {
+    form: {
+      movieName: {
+        required,
+        maxLength: maxLength(20),
+      },
+
+      description: {
+        maxLength: maxLength(40),
+      },
+
+      url: {
+        required,
+      },
+    },
+  },
+
+  created() {
+    this.form.movieName = this.movie.title;
+    this.form.description = this.movie.description;
+    this.form.url = this.movie.images[0].url;
+  },
+
   methods: {
       closeDialog() {
           this.$emit('close');
       },
 
-      x() {
-          console.log(this.movie);
+      getValidationClass(fieldName) {
+      const field = this.$v.form[fieldName];
+
+      if (field) {
+        return {
+          "md-invalid": field.$invalid && field.$dirty,
+        };
       }
+    },
+
+    clearForm() {
+      this.$v.$reset();
+      this.form.movieName = null;
+      this.form.description = null;
+      this.form.url = null;
+    },
+
+    saveMovie() {
+      this.sending = true;
+      this.editMovie();
+
+      window.setTimeout(() => {
+        this.movie = `${this.form.movieName}`;
+        this.movieSaved = true;
+        this.sending = false;
+        this.clearForm();
+      }, 1500);
+    },
+
+    validateMovie() {
+      this.$v.$touch();
+
+      if (!this.$v.$invalid) {
+        this.saveMovie();
+      }
+    },
+
+    editMovie() {
+      let movie = {
+        id: this.movie.id,
+        title: this.form.movieName,
+        description: this.form.description,
+        images: [
+          {
+            url: this.form.url,
+          },
+        ],
+      };
+
+      this.$store.state.idMovie = this.movie.id;
+      this.$store.state.editMovie = movie;
+      this.$store.commit("editMovie");
+    },
   }
   
 };
 </script>
 
-<style>
+<style scoped>
+
+.md-layout {
+  display: block;
+}
+
+.md-layout-item.md-size-50 {
+  min-width: 98%;
+  max-width: 50%;
+  flex: 0 1 50%;
+  margin: 16px;
+}
+
+.md-dialog /deep/.md-dialog-container {
+    min-width: 85%;
+  }
+
 </style>

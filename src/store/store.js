@@ -11,6 +11,7 @@ export const store = new Vuex.Store({
         movie: [],
         movieToViewLater: [],
         newMovie: [],
+        editMovie: [],
         idMovie: null
     },
 
@@ -41,9 +42,29 @@ export const store = new Vuex.Store({
             })
         },
 
-        putMovie() {
-            
-        }
+        editMovie(state) {
+            Vue.axios.put("https://samir-moviecatalog-api.azurewebsites.net/Movies/" + state.idMovie, state.editMovie).then( (res) => {
+                console.log(res);
+            })
+        },
+
+        changeLike(state) {
+            Vue.axios.put("https://samir-moviecatalog-api.azurewebsites.net/Movies/changeLike/" + state.idMovie).then( (res) => {
+                console.log(res);
+            })
+        },
+
+        changeView(state) {
+            Vue.axios.put("https://samir-moviecatalog-api.azurewebsites.net/Movies/changeView/" + state.idMovie).then( (res) => {
+                console.log(res);
+            })
+        },
+
+        changeToLater(state) {
+            Vue.axios.put("https://samir-moviecatalog-api.azurewebsites.net/Movies/changeToLater/" + state.idMovie).then( (res) => {
+                console.log(res);
+            })
+        },
     },
 
     getters: {
